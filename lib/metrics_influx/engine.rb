@@ -49,8 +49,6 @@ class MetricsInflux::Engine
   end
 
   def run!
-    test_connection!
-
     grouped_collectors = @collectors.group_by { |coll| coll['interval'] }
 
     grouped_collectors.each do |interval,collectors|
@@ -78,6 +76,16 @@ class MetricsInflux::Engine
       end
     end
 
-    do_post! data
+    begin
+      do_post! data
+    rescue MetricsInflux::Engine::Error => e
+      DockerBoss.logger.error "Error posting update: #{e.message}"
+    rescue Net::OpenTimeout => e
+      DockerBoss.logger.error "Error posting update: #{e.message}"
+    rescue Errno::ECONNREFUSED => e
+      DockerBoss.logger.error "Error posting update: #{e.message}"
+    rescue SocketError => e
+      DockerBoss.logger.error "Error posting update: #{e.message}"
+    end
   end
 end
