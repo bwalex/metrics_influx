@@ -79,13 +79,13 @@ class MetricsInflux::Engine
     begin
       do_post! data
     rescue MetricsInflux::Engine::Error => e
-      DockerBoss.logger.error "Error posting update: #{e.message}"
+      MetricsInflux.logger.error "Error posting update: #{e.message}"
     rescue Net::OpenTimeout => e
-      DockerBoss.logger.error "Error posting update: #{e.message}"
+      MetricsInflux.logger.error "Error posting update: #{e.message}"
     rescue Errno::ECONNREFUSED => e
-      DockerBoss.logger.error "Error posting update: #{e.message}"
+      MetricsInflux.logger.error "Error posting update: #{e.message}"
     rescue SocketError => e
-      DockerBoss.logger.error "Error posting update: #{e.message}"
+      MetricsInflux.logger.error "Error posting update: #{e.message}"
     end
   end
 end
